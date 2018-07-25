@@ -63,6 +63,10 @@ class Life
   attr_accessor :board
 
   def initialize(array)
+    create_board(array)
+  end
+
+  def create_board(array)
     values = []
     array.each do |row|
       row_cells = []
@@ -75,6 +79,14 @@ class Life
   end
 
   def step
-    # iterate through each cell and calculate its next value, creating a new Board with those values
+    values = []
+    @board.each_with_index do |row, y|
+      row_cells = []
+      row.each_with_index do |cell, x|
+        row_cells << cell.step([x, y])
+      end
+      values << row_cells
+    end
+    create_board(values)
   end
 end
