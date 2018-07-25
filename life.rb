@@ -40,6 +40,7 @@ class Cell
       end
     end
 
+    # Check each cases to determine what value to return for this cell's age.
     case @age
     when 0
       if adult_neighbor_count == 2 && total_neighbor_count == 2
@@ -54,7 +55,7 @@ class Cell
         return 3
       end
     end
-
+    # When no cases pass, the cell has died or remained dead
     return 0
   end
 
@@ -79,19 +80,24 @@ class Life
     @board = values
   end
 
-  def step
-    values = []
-    @board.each_with_index do |row, x|
-      row_cells = []
-      row.each_with_index do |cell, y|
-        row_cells << cell.step([x, y])
+  def step(x = 1)
+    x.times do
+      values = []
+      @board.each_with_index do |row, x|
+        row_cells = []
+        row.each_with_index do |cell, y|
+          row_cells << cell.step([x, y])
+        end
+        values << row_cells
       end
-      values << row_cells
+      create_board(values)
+      render
     end
-    create_board(values)
   end
 
   def render
+    puts "===================="
+
     @board.each do |row|
       row_string = ""
       row.each do |cell|
@@ -101,3 +107,20 @@ class Life
     end
   end
 end
+
+array = [
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,1,1,0,0,0,0,0,0],
+  [0,0,0,0,2,0,0,0,0,0],
+  [0,0,0,1,2,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,1,0,0,0,0,0,0,0],
+  [0,2,1,0,0,0,0,0,0,0],
+  [0,2,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+]
+
+life = Life.new(array)
+life.render
+life.step(19)
