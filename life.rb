@@ -18,7 +18,35 @@ class Cell
   end
 
   def step(position)
-    # calculate next life cycle for this cell
+    adult_neighbor_count = 0
+    total_neighbor_count = 0
+    neighbors(position).each do |cell_position|
+      cell = self.board[cell[0]][cell[1]]
+      if cell.age > 0
+        total_neighbor_count += 1
+      end
+
+      if cell.age == 2
+        adult_neighbor_count += 1
+      end
+    end
+
+    case self.age
+    when 0
+      if adult_neighbor_count == 2 && total_neighbor_count == 2
+        return 1
+      end
+    when 1
+      if (1..5) === total_neighbor_count
+        return 2
+      end
+    when 2
+      if (1..3) === total_neighbor_count
+        return 3
+      end
+    end
+
+    return 0
   end
 
 end
