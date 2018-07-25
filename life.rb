@@ -1,9 +1,17 @@
 class Cell
+  attr_accessor :age, :board
+
+  def initialize(age, board)
+    @age = age
+    @board = board
+  end
+
   def neighbors(position)
     results = []
     # Get limits of board
     row_limit = self.board.count
     column_limit = self.board[0].count
+
     x = [0, position[0] - 1].max
     while x <= [position[0] + 1, row_limit].min do
       y = [0, position[1] - 1].max
@@ -31,7 +39,7 @@ class Cell
       end
     end
 
-    case self.age
+    case @age
     when 0
       if adult_neighbor_count == 2 && total_neighbor_count == 2
         return 1
@@ -51,9 +59,19 @@ class Cell
 
 end
 
-class Board
-  def initialize
-    # Create initial starting position for board
+class Life
+  attr_accessor :board
+
+  def initialize(array)
+    values = []
+    array.each do |row|
+      row_cells = []
+      row.each do |cell|
+        row_cells << Cell.new(cell, self)
+      end
+      values << row_cells
+    end
+    @board = values
   end
 
   def step
