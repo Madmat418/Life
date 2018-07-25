@@ -1,16 +1,16 @@
 class Cell
-  attr_accessor :age, :board
+  attr_accessor :age, :life
 
-  def initialize(age, board)
+  def initialize(age, life)
     @age = age
-    @board = board
+    @life = life
   end
 
   def neighbors(position)
     results = []
     # Get limits of board
-    row_limit = self.board.count
-    column_limit = self.board[0].count
+    row_limit = @life.board.count - 1
+    column_limit = @life.board[0].count - 1
 
     x = [0, position[0] - 1].max
     while x <= [position[0] + 1, row_limit].min do
@@ -23,13 +23,14 @@ class Cell
       end
       x += 1
     end
+    return results
   end
 
   def step(position)
     adult_neighbor_count = 0
     total_neighbor_count = 0
     neighbors(position).each do |cell_position|
-      cell = self.board[cell[0]][cell[1]]
+      cell = @life.board[cell_position[0]][cell_position[1]]
       if cell.age > 0
         total_neighbor_count += 1
       end
@@ -80,13 +81,23 @@ class Life
 
   def step
     values = []
-    @board.each_with_index do |row, y|
+    @board.each_with_index do |row, x|
       row_cells = []
-      row.each_with_index do |cell, x|
+      row.each_with_index do |cell, y|
         row_cells << cell.step([x, y])
       end
       values << row_cells
     end
     create_board(values)
+  end
+
+  def render
+    @board.each do |row|
+      row_string = ""
+      row.each do |cell|
+        row_string << "#{cell.age}  "
+      end
+      puts row_string
+    end
   end
 end
